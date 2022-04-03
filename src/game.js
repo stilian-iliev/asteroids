@@ -1,4 +1,5 @@
 import * as ship from "./ship.js";
+import * as asteroids from "./asteroid.js";
 
 export const FPS = 30; // frames per second
 export const canv = document.getElementById("gameCanvas");
@@ -9,8 +10,11 @@ document.addEventListener("keydown", keyDown);
 document.addEventListener("keyup", keyUp);
 
 function resize(){
+    
     canv.width = window.innerWidth;
     canv.height = window.innerHeight;
+    asteroids.generateAsteroids();
+    
 }
   
 resize()
@@ -52,7 +56,9 @@ function update() {
     ctx.fillRect(0, 0, canv.width, canv.height);
     
     ship.update();
+    asteroids.update();
+    // asteroids.update();
     // thrust the ship
 
 }
-
+// asteroids.generateAsteroids();

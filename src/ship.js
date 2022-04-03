@@ -21,21 +21,20 @@ function getShip() {
     };
 }
 
-let ship = getShip();
+export let ship = getShip();
 
 export function update() {
-    drawShip();
-
     const velocity = Math.sqrt(Math.pow(ship.thrust.x, 2) + Math.pow(ship.thrust.y, 2));
     if (ship.thrusting && velocity < SPEED_LIMIT) {
-        drawThruster();
+        
         ship.thrust.x += SHIP_THRUST * Math.cos(ship.a) / FPS;
         ship.thrust.y -= SHIP_THRUST * Math.sin(ship.a) / FPS;
+        drawThruster();
     } else {
         ship.thrust.x -= FRICTION * ship.thrust.x / FPS;
         ship.thrust.y -= FRICTION * ship.thrust.y / FPS;
     }
-
+    drawShip();
     ship.a += ship.rot;
 
     ship.x += ship.thrust.x;
