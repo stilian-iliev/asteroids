@@ -1,5 +1,6 @@
 import * as shipService from "./ship.js";
 import * as asteroidsService from "./asteroid.js";
+import * as bulletsService from "./bullet.js";
 import { distanceBetweenPoints as distanceBetweenPoints } from "./utils.js";
 
 export const FPS = 30; // frames per second
@@ -13,9 +14,7 @@ document.addEventListener("keyup", keyUp);
 function resize(){
     
     canv.width = window.innerWidth;
-    canv.height = window.innerHeight;
-    asteroidsService.generateAsteroids();
-    
+    canv.height = window.innerHeight;    
 }
   
 resize()
@@ -33,6 +32,9 @@ function keyDown(event) {
             break;
         case 39: // right arrow (rotate ship right) -
             shipService.rotateRight();
+            break;
+        case 32:
+            shipService.shoot();
             break;
     }
 }
@@ -58,16 +60,29 @@ function update() {
     
     shipService.update();
     asteroidsService.update();
-    if (!shipService.ship.inv && checkColision(shipService.ship)) shipService.onCollision();
+    bulletsService.update();
+    checkCollision();
+    
 
 }
 
-function checkColision(object) {
+function checkCollision() {
     for (const asteroid of asteroidsService.asteroids) {
-        if (distanceBetweenPoints(object.x, object.y, asteroid.x, asteroid.y) < object.r + asteroid.r) {
+        if (!shipService.ship.inv && distanceBetweenPoints(shipService.ship.x, shipService.ship.y, asteroid.x, asteroid.y) < shipService.ship.r + asteroid.r) {
+            shipService.onCollision();
             asteroidsService.onCollision(asteroid);
-            return true;
+        }
+        for (const bullet of bulletsService.bullets) {
+            if (distanceBetweenPoints(bullet.x, bullet.y, asteroid.x, asteroid.y) < asteroid.r) {
+                bulletsService.onCollision(bullet);
+                asteroidsService.onCollision(asteroid);
+            }
         }
     }
-    return false;
 }
+
+function startGame() {
+    asteroidsService.generateAsteroids();
+    
+}
+startGame();

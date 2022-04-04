@@ -1,11 +1,13 @@
 import { canv, ctx, FPS } from "./game.js";
+import * as bullet from "./bullet.js";
 
 const FRICTION = 0.7; // friction coefficient of space (0 = no friction, 1 = lots of friction)
 const SHIP_SIZE = 30; // ship height in pixels
 const SHIP_THRUST = 10; // acceleration of the ship in pixels per second per second
-const TURN_SPEED = 360; // turn speed in degrees per second
+const TURN_SPEED = 320; // turn speed in degrees per second
 const SPEED_LIMIT = 50; // maximum velocity the ship can travel at
 const INV_TIME = 60; //invincibility time in frames
+const SHOOT_COOLDOWN = 10;
 
 function newShip() {
     return {
@@ -19,7 +21,8 @@ function newShip() {
             x: 0,
             y: 0
         },
-        inv: INV_TIME
+        inv: INV_TIME,
+        cd: SHOOT_COOLDOWN
     };
 }
 
@@ -28,6 +31,9 @@ export let ship = newShip();
 export function update() {
     const blink = ship.inv % 5 == 0;
     const velocity = Math.sqrt(Math.pow(ship.thrust.x, 2) + Math.pow(ship.thrust.y, 2));
+    if (ship.cd) {
+        ship.cd--;
+    }
     if (ship.thrusting && velocity < SPEED_LIMIT) {
         
         ship.thrust.x += SHIP_THRUST * Math.cos(ship.a) / FPS;
@@ -138,4 +144,11 @@ function drawThruster() {
 
 export function onCollision() {
     ship = newShip();
+}
+
+export function shoot() {
+    if (!ship.cd) {
+        bullet.shoot(ship);
+        ship.cd = SHOOT_COOLDOWN;
+    }
 }

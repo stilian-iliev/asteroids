@@ -1,12 +1,12 @@
 import { FPS, canv, ctx } from "./game.js";
 import { distanceBetweenPoints } from "./utils.js";
 
-const ROID_SIZE = 50;
+const ROID_SIZE = 75;
 const ROID_SPEED = 100;
 const ROID_VERT = 10;
 const ROID_JAG = 0.3;
 //todo
-let ROID_NUM = 4;
+const ROID_NUM = 4;
 
 export let asteroids = [];
 
@@ -32,7 +32,7 @@ function newAsteroid(x, y, r = ROID_SIZE) {
 export function generateAsteroids() {
     asteroids = [];
     let x,y;
-    for(let i = 0; i < ROID_NUM; i++) {
+    for(let i = 0; i < ROID_NUM + 0 * 2; i++) {
         do {
             x = Math.floor(Math.random() * canv.width);
             y = Math.floor(Math.random() * canv.height);
@@ -45,7 +45,10 @@ export function generateAsteroids() {
 export function update(){
     drawAsteroids();
     moveAsteroids();
-
+    if(!asteroids) {
+        ROID_NUM += 2;
+        generateAsteroids();
+    }
 }
 //todo
 function drawAsteroids() {
@@ -108,5 +111,4 @@ export function onCollision(asteroid) {
         asteroids.push(newAsteroid(asteroid.x, asteroid.y , asteroid.r /2));
     }
     asteroids.splice(asteroids.indexOf(asteroid), 1);
-    console.log(asteroids.indexOf(asteroid));
 }
