@@ -5,8 +5,9 @@ const SHIP_SIZE = 30; // ship height in pixels
 const SHIP_THRUST = 10; // acceleration of the ship in pixels per second per second
 const TURN_SPEED = 360; // turn speed in degrees per second
 const SPEED_LIMIT = 50; // maximum velocity the ship can travel at
+const INV_TIME = 60; //invincibility time in frames
 
-function getShip() {
+function newShip() {
     return {
         x: canv.width / 2,
         y: canv.height / 2,
@@ -17,24 +18,38 @@ function getShip() {
         thrust: {
             x: 0,
             y: 0
-        }
+        },
+        inv: INV_TIME
     };
 }
 
-export let ship = getShip();
+export let ship = newShip();
 
 export function update() {
+    const blink = ship.inv % 5 == 0;
     const velocity = Math.sqrt(Math.pow(ship.thrust.x, 2) + Math.pow(ship.thrust.y, 2));
     if (ship.thrusting && velocity < SPEED_LIMIT) {
         
         ship.thrust.x += SHIP_THRUST * Math.cos(ship.a) / FPS;
         ship.thrust.y -= SHIP_THRUST * Math.sin(ship.a) / FPS;
-        drawThruster();
+        if (blink) {
+            drawThruster();
+        }
+        
     } else {
         ship.thrust.x -= FRICTION * ship.thrust.x / FPS;
         ship.thrust.y -= FRICTION * ship.thrust.y / FPS;
     }
-    drawShip();
+    if (blink) {
+        drawShip();
+    }
+
+    if (ship.inv == 0) {
+        // checkColision();
+    } else {
+        ship.inv--;
+    }
+    
     ship.a += ship.rot;
 
     ship.x += ship.thrust.x;
@@ -73,7 +88,7 @@ export function stopThrust() {
 }
 
 export function resetPos() {
-    ship = getShip();
+    ship = newShip();
 }
 
 function drawShip() {
@@ -119,4 +134,8 @@ function drawThruster() {
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
+}
+
+export function onCollision() {
+    ship = newShip();
 }

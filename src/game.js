@@ -1,5 +1,6 @@
-import * as ship from "./ship.js";
-import * as asteroids from "./asteroid.js";
+import * as shipService from "./ship.js";
+import * as asteroidsService from "./asteroid.js";
+import { distanceBetweenPoints as distanceBetweenPoints } from "./utils.js";
 
 export const FPS = 30; // frames per second
 export const canv = document.getElementById("gameCanvas");
@@ -13,7 +14,7 @@ function resize(){
     
     canv.width = window.innerWidth;
     canv.height = window.innerHeight;
-    asteroids.generateAsteroids();
+    asteroidsService.generateAsteroids();
     
 }
   
@@ -25,13 +26,13 @@ setInterval(update, 1000 / FPS);
 function keyDown(event) {
     switch(event.keyCode) {
         case 37: // left arrow (rotate ship left) +
-            ship.rotateLeft();
+            shipService.rotateLeft();
             break;
         case 38: // up arrow (thrust the ship forward)
-            ship.thrust();
+            shipService.thrust();
             break;
         case 39: // right arrow (rotate ship right) -
-            ship.rotateRight();
+            shipService.rotateRight();
             break;
     }
 }
@@ -39,13 +40,13 @@ function keyDown(event) {
 function keyUp(event) {
     switch(event.keyCode) {
         case 37: // left arrow 
-            ship.stopRotation();
+            shipService.stopRotation();
             break;
         case 38: // up arrow
-            ship.stopThrust();
+            shipService.stopThrust();
             break;
         case 39: // right arrow
-            ship.stopRotation();
+            shipService.stopRotation();
             break;
     }
 }
@@ -55,10 +56,18 @@ function update() {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canv.width, canv.height);
     
-    ship.update();
-    asteroids.update();
-    // asteroids.update();
-    // thrust the ship
+    shipService.update();
+    asteroidsService.update();
+    if (!shipService.ship.inv && checkColision(shipService.ship)) shipService.onCollision();
 
 }
-// asteroids.generateAsteroids();
+
+function checkColision(object) {
+    for (const asteroid of asteroidsService.asteroids) {
+        if (distanceBetweenPoints(object.x, object.y, asteroid.x, asteroid.y) < object.r + asteroid.r) {
+            asteroidsService.onCollision(asteroid);
+            return true;
+        }
+    }
+    return false;
+}

@@ -1,15 +1,16 @@
 import { FPS, canv, ctx } from "./game.js";
+import { distanceBetweenPoints } from "./utils.js";
 
 const ROID_SIZE = 50;
-const ROID_SPEED = 50;
+const ROID_SPEED = 100;
 const ROID_VERT = 10;
 const ROID_JAG = 0.3;
 //todo
 let ROID_NUM = 4;
 
-let asteroids = [];
+export let asteroids = [];
 
-function newAsteroid(x, y) {
+function newAsteroid(x, y, r = ROID_SIZE) {
     //todo
     let lvlMultiply = 1 + 0.1 * 0;
     let asteroid = {
@@ -17,7 +18,7 @@ function newAsteroid(x, y) {
         y: y,
         xv: Math.random() * ROID_SPEED * lvlMultiply / FPS * (Math.random() > 0.5 ? 1 : -1),
         yv: Math.random() * ROID_SPEED * lvlMultiply / FPS * (Math.random() > 0.5 ? 1 : -1),
-        r: ROID_SIZE,
+        r: r,
         a: Math.random() * Math.PI * 2,
         vert: Math.floor(Math.random() * (ROID_VERT + 1) + ROID_VERT / 2),
         offs : []
@@ -36,22 +37,14 @@ export function generateAsteroids() {
             x = Math.floor(Math.random() * canv.width);
             y = Math.floor(Math.random() * canv.height);
             //todo
-        } while (findDistanceBetweenPoints(0, 0, x, y) < ROID_SIZE * 2);
+        } while (distanceBetweenPoints(0, 0, x, y) < ROID_SIZE * 2);
         asteroids.push(newAsteroid(x,y));
     }
-    console.log(asteroids);
-}
-
-function findDistanceBetweenPoints(x1, y1, x2, y2) {
-    const a = x1 - x2;
-    const b = y1 - y2;
-
-    return Math.sqrt(a * a + b * b);
 }
 
 export function update(){
     drawAsteroids();
-    
+    moveAsteroids();
 
 }
 //todo
@@ -85,5 +78,35 @@ function drawAsteroids() {
 		}
 		ctx.closePath();
 		ctx.stroke();
+
+
 	}
+}
+
+function moveAsteroids() {
+    for (const asteroid of asteroids) {
+        asteroid.x += asteroid.xv;
+        asteroid.y += asteroid.yv;
+
+        if (asteroid.x + asteroid.r < 0) {
+            asteroid.x = canv.width + asteroid.r;
+        } else if (asteroid.x - asteroid.r > canv.width) {
+            asteroid.x = 0 - asteroid.r;
+        }
+
+        if (asteroid.y + asteroid.r < 0) {
+            asteroid.y = canv.height + asteroid.r;
+        } else if (asteroid.y - asteroid.r > canv.height) {
+            asteroid.y = 0 - asteroid.r;
+        }
+    }
+}
+
+export function onCollision(asteroid) {
+    if (asteroid.r == ROID_SIZE || asteroid.r == ROID_SIZE / 2) {
+        asteroids.push(newAsteroid(asteroid.x, asteroid.y , asteroid.r /2));
+        asteroids.push(newAsteroid(asteroid.x, asteroid.y , asteroid.r /2));
+    }
+    asteroids.splice(asteroids.indexOf(asteroid), 1);
+    console.log(asteroids.indexOf(asteroid));
 }
