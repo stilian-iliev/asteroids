@@ -1,12 +1,11 @@
-import { FPS, canv, ctx } from "./game.js";
-import { distanceBetweenPoints } from "./utils.js";
+import { canv, ctx } from "./game.js";
+import { distanceBetweenPoints, FPS } from "./utils.js";
 
 const ROID_SIZE = 75;
 const ROID_SPEED = 100;
 const ROID_VERT = 10;
 const ROID_JAG = 0.3;
-//todo
-const ROID_NUM = 4;
+const ROID_NUM = 0;
 
 export let asteroids = [];
 

@@ -1,9 +1,8 @@
 import * as shipService from "./ship.js";
 import * as asteroidsService from "./asteroid.js";
 import * as bulletsService from "./bullet.js";
-import { distanceBetweenPoints as distanceBetweenPoints } from "./utils.js";
+import { distanceBetweenPoints, FPS } from "./utils.js";
 
-export const FPS = 30; // frames per second
 export const canv = document.getElementById("gameCanvas");
 export const ctx = canv.getContext("2d");
 
@@ -12,9 +11,8 @@ document.addEventListener("keydown", keyDown);
 document.addEventListener("keyup", keyUp);
 
 function resize(){
-    
     canv.width = window.innerWidth;
-    canv.height = window.innerHeight;    
+    canv.height = window.innerHeight;   
 }
   
 resize()
@@ -22,6 +20,7 @@ resize()
 // set up the game loop
 setInterval(update, 1000 / FPS);
 
+let lastDirection;
 function keyDown(event) {
     switch(event.keyCode) {
         case 37: // left arrow (rotate ship left) +
@@ -73,7 +72,7 @@ function checkCollision() {
             asteroidsService.onCollision(asteroid);
         }
         for (const bullet of bulletsService.bullets) {
-            if (distanceBetweenPoints(bullet.x, bullet.y, asteroid.x, asteroid.y) < asteroid.r) {
+            if (distanceBetweenPoints(bullet.x, bullet.y, asteroid.x, asteroid.y) < asteroid.r + 5) {
                 bulletsService.onCollision(bullet);
                 asteroidsService.onCollision(asteroid);
             }
@@ -86,3 +85,16 @@ function startGame() {
     
 }
 startGame();
+
+//can shoot
+//make bullet deaccelerate if shot backwards
+
+//TODO
+//fix blink speed
+//make ship and asteroid explosions
+
+//gamestart
+//lives
+//levels
+//score
+//bestscore

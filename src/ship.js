@@ -1,13 +1,15 @@
-import { canv, ctx, FPS } from "./game.js";
+import { canv, ctx } from "./game.js";
+import { FPS } from "./utils.js";
 import * as bullet from "./bullet.js";
 
-const FRICTION = 0.7; // friction coefficient of space (0 = no friction, 1 = lots of friction)
+const FRICTION = 0.7; // friction coefficient of space (0 = no friction, 5 = lots of friction)
 const SHIP_SIZE = 30; // ship height in pixels
-const SHIP_THRUST = 10; // acceleration of the ship in pixels per second per second
-const TURN_SPEED = 320; // turn speed in degrees per second
-const SPEED_LIMIT = 50; // maximum velocity the ship can travel at
-const INV_TIME = 60; //invincibility time in frames
-const SHOOT_COOLDOWN = 10;
+const SHIP_THRUST = 10 ; // acceleration of the ship in pixels per second 
+const TURN_SPEED = 360; // turn speed in degrees per second
+const SPEED_LIMIT = 1200 / FPS; // maximum velocity the ship can travel at
+const INV_TIME = 1.5 * FPS; //invincibility time in secs
+const SHOOT_COOLDOWN = 300 * FPS / 1000; //in ms
+const DEATH_TIMER = 0.5 * FPS //in sec
 
 function newShip() {
     return {
@@ -22,20 +24,23 @@ function newShip() {
             y: 0
         },
         inv: INV_TIME,
-        cd: SHOOT_COOLDOWN
+        cd: SHOOT_COOLDOWN,
+        dead: 0
     };
 }
 
 export let ship = newShip();
 
+let x,y;
 export function update() {
+    x = ship.x;
+    y = ship.y;
     const blink = ship.inv % 5 == 0;
-    const velocity = Math.sqrt(Math.pow(ship.thrust.x, 2) + Math.pow(ship.thrust.y, 2));
+    const velocity = Math.sqrt(Math.pow(ship.thrust.x, 2)+ Math.pow(ship.thrust.y, 2));
     if (ship.cd) {
         ship.cd--;
     }
     if (ship.thrusting && velocity < SPEED_LIMIT) {
-        
         ship.thrust.x += SHIP_THRUST * Math.cos(ship.a) / FPS;
         ship.thrust.y -= SHIP_THRUST * Math.sin(ship.a) / FPS;
         if (blink) {
@@ -46,15 +51,17 @@ export function update() {
         ship.thrust.x -= FRICTION * ship.thrust.x / FPS;
         ship.thrust.y -= FRICTION * ship.thrust.y / FPS;
     }
-    if (blink) {
+    if (blink && !ship.dead) {
         drawShip();
     }
 
-    if (ship.inv == 0) {
-        // checkColision();
-    } else {
+    if (ship.inv) {
         ship.inv--;
     }
+    if (ship.dead) {
+        ship.dead--;
+    }
+    
     
     ship.a += ship.rot;
 
@@ -144,11 +151,12 @@ function drawThruster() {
 
 export function onCollision() {
     ship = newShip();
+    ship.dead = DEATH_TIMER;
 }
 
 export function shoot() {
     if (!ship.cd) {
-        bullet.shoot(ship);
+        bullet.shoot(ship, x,y);
         ship.cd = SHOOT_COOLDOWN;
     }
 }

@@ -4,3 +4,5 @@ export function distanceBetweenPoints(x1, y1, x2, y2) {
 
     return Math.sqrt(a * a + b * b);
 }
+
+export const FPS = 60; // frames per second
