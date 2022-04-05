@@ -1,17 +1,18 @@
-import { canv, ctx } from "./game.js";
+import { canv, ctx, level } from "./game.js";
 import { distanceBetweenPoints, FPS } from "./utils.js";
 
 const ROID_SIZE = 75;
 const ROID_SPEED = 100;
 const ROID_VERT = 10;
 const ROID_JAG = 0.3;
-const ROID_NUM = 0;
+const ROID_NUM = 2;
+const ASTEROIDS_PER_LEVEL = 2;
 
 export let asteroids = [];
 
 function newAsteroid(x, y, r = ROID_SIZE) {
     //todo
-    let lvlMultiply = 1 + 0.1 * 0;
+    let lvlMultiply = 1 + 0.1 * level;
     let asteroid = {
         x: x,
         y: y,
@@ -31,7 +32,7 @@ function newAsteroid(x, y, r = ROID_SIZE) {
 export function generateAsteroids() {
     asteroids = [];
     let x,y;
-    for(let i = 0; i < ROID_NUM + 0 * 2; i++) {
+    for(let i = 0; i < ROID_NUM + level * ASTEROIDS_PER_LEVEL; i++) {
         do {
             x = Math.floor(Math.random() * canv.width);
             y = Math.floor(Math.random() * canv.height);
@@ -44,10 +45,7 @@ export function generateAsteroids() {
 export function update(){
     drawAsteroids();
     moveAsteroids();
-    if(!asteroids) {
-        ROID_NUM += 2;
-        generateAsteroids();
-    }
+
 }
 //todo
 function drawAsteroids() {

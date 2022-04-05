@@ -6,6 +6,10 @@ import { distanceBetweenPoints, FPS } from "./utils.js";
 export const canv = document.getElementById("gameCanvas");
 export const ctx = canv.getContext("2d");
 
+export let level;
+let deaths = 0;
+const LIVES = 3;
+
 window.addEventListener('resize', resize)
 document.addEventListener("keydown", keyDown);
 document.addEventListener("keyup", keyUp);
@@ -20,8 +24,9 @@ resize()
 // set up the game loop
 setInterval(update, 1000 / FPS);
 
-let lastDirection;
+// let lastDirection;
 function keyDown(event) {
+    if (deaths < LIVES) {
     switch(event.keyCode) {
         case 37: // left arrow (rotate ship left) +
             shipService.rotateLeft();
@@ -38,8 +43,11 @@ function keyDown(event) {
     }
 }
 
+}
+
 function keyUp(event) {
-    switch(event.keyCode) {
+    
+        switch(event.keyCode) {
         case 37: // left arrow 
             shipService.stopRotation();
             break;
@@ -50,6 +58,7 @@ function keyUp(event) {
             shipService.stopRotation();
             break;
     }
+    
 }
 
 function update() {
@@ -57,19 +66,28 @@ function update() {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canv.width, canv.height);
     
-    shipService.update();
+    if(deaths < 3) shipService.update();
     asteroidsService.update();
     bulletsService.update();
     checkCollision();
     
-
+    if (asteroidsService.asteroids.length == 0) {
+        levelUp();
+    }
+    
 }
 
 function checkCollision() {
     for (const asteroid of asteroidsService.asteroids) {
-        if (!shipService.ship.inv && distanceBetweenPoints(shipService.ship.x, shipService.ship.y, asteroid.x, asteroid.y) < shipService.ship.r + asteroid.r) {
+        if (deaths < LIVES && !shipService.ship.inv && distanceBetweenPoints(shipService.ship.x, shipService.ship.y, asteroid.x, asteroid.y) < shipService.ship.r + asteroid.r) {
             shipService.onCollision();
             asteroidsService.onCollision(asteroid);
+            deaths++;
+            console.log(deaths);
+            if (deaths == LIVES) {
+                console.log("gameover");
+                level = 0;
+            }
         }
         for (const bullet of bulletsService.bullets) {
             if (distanceBetweenPoints(bullet.x, bullet.y, asteroid.x, asteroid.y) < asteroid.r + 5) {
@@ -80,9 +98,17 @@ function checkCollision() {
     }
 }
 
-function startGame() {
+function levelUp() {
+    level++;
     asteroidsService.generateAsteroids();
     
+}
+
+
+function startGame() {
+    level = 1;
+    deaths = 0;
+    asteroidsService.generateAsteroids();
 }
 startGame();
 
@@ -90,7 +116,6 @@ startGame();
 //make bullet deaccelerate if shot backwards
 
 //TODO
-//fix blink speed
 //make ship and asteroid explosions
 
 //gamestart
