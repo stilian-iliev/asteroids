@@ -1,16 +1,6 @@
 import { canv, ctx } from "./game.js";
-import { FPS } from "./utils.js";
 import * as bullet from "./bullet.js";
-
-const FRICTION = 0.7; // friction coefficient of space (0 = no friction, 1 = lots of friction)
-const SHIP_SIZE = 30; // ship height in pixels
-const SHIP_THRUST = 10 ; // acceleration of the ship in pixels per second 
-const TURN_SPEED = 360; // turn speed in degrees per second
-const SPEED_LIMIT = 1200 / FPS; // maximum velocity the ship can travel at
-const INV_TIME = 2.5 * FPS; //invincibility time in secs
-const SHOOT_COOLDOWN = 200 * FPS / 1000; //in ms
-const DEATH_TIMER = 0.5 * FPS //in sec
-const BLINK_DURATION = 5; //in frames
+import {FRICTION, SHIP_SIZE, SHIP_THRUST, TURN_SPEED, SPEED_LIMIT, INV_TIME, SHOOT_COOLDOWN, DEATH_TIMER, BLINK_DURATION, FPS} from "../config/config.js";
 
 function newShip() {
     return {
@@ -98,7 +88,6 @@ export function rotateRight() {
 
 export function thrust() {
     ship.thrusting = true;
-    console.log(ship);
 }
 
 export function stopRotation() {

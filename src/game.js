@@ -1,14 +1,14 @@
 import * as shipService from "./ship.js";
 import * as asteroidsService from "./asteroid.js";
 import * as bulletsService from "./bullet.js";
-import { distanceBetweenPoints, FPS } from "./utils.js";
+import { distanceBetweenPoints } from "./utils.js";
+import { FPS, LIVES } from "../config/config.js";
 
 export const canv = document.getElementById("gameCanvas");
 export const ctx = canv.getContext("2d");
 
 export let level;
 let deaths = 0;
-const LIVES = 3;
 
 window.addEventListener('resize', resize)
 document.addEventListener("keydown", keyDown);
@@ -27,21 +27,23 @@ setInterval(update, 1000 / FPS);
 // let lastDirection;
 function keyDown(event) {
     if (deaths < LIVES) {
-    switch(event.keyCode) {
-        case 37: // left arrow (rotate ship left) +
-            shipService.rotateLeft();
-            break;
-        case 38: // up arrow (thrust the ship forward)
-            shipService.thrust();
-            break;
-        case 39: // right arrow (rotate ship right) -
-            shipService.rotateRight();
-            break;
-        case 32:
-            shipService.shoot();
-            break;
+        switch(event.keyCode) {
+            case 37: // left arrow (rotate ship left) +
+                shipService.rotateLeft();
+                break;
+            case 38: // up arrow (thrust the ship forward)
+                shipService.thrust();
+                break;
+            case 39: // right arrow (rotate ship right) -
+                shipService.rotateRight();
+                break;
+            case 32:
+                shipService.shoot();
+                break;
+        } 
+    } else {
+        startGame();
     }
-}
 
 }
 
@@ -70,7 +72,9 @@ function update() {
     asteroidsService.update();
     bulletsService.update();
     checkCollision();
-    
+    if (deaths == LIVES) {
+        
+    }
     if (asteroidsService.asteroids.length == 0) {
         levelUp();
     }
@@ -83,11 +87,6 @@ function checkCollision() {
             shipService.onCollision();
             asteroidsService.onCollision(asteroid);
             deaths++;
-            console.log(deaths);
-            if (deaths == LIVES) {
-                console.log("gameover");
-                level = 0;
-            }
         }
         for (const bullet of bulletsService.bullets) {
             if (distanceBetweenPoints(bullet.x, bullet.y, asteroid.x, asteroid.y) < asteroid.r + 5) {
@@ -100,8 +99,7 @@ function checkCollision() {
 
 function levelUp() {
     level++;
-    asteroidsService.generateAsteroids();
-    
+    asteroidsService.generateAsteroids(shipService.ship);
 }
 
 
@@ -109,6 +107,7 @@ function startGame() {
     level = 1;
     deaths = 0;
     asteroidsService.generateAsteroids();
+    
 }
 startGame();
 

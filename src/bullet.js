@@ -1,9 +1,5 @@
 import { canv, ctx} from "./game.js";
-import { FPS } from "./utils.js";
-
-const BULLET_SIZE = 30;
-const BULLET_SPEED = 600;
-const BULLET_TTL = 0.75 * FPS; //in sec
+import { FPS, BULLET_SIZE, BULLET_SPEED, BULLET_TTL } from "../config/config.js";
 
 export let bullets = [];
 
