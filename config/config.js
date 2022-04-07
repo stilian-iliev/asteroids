@@ -1,11 +1,12 @@
 //game config
 export const FPS = 60; // frames per second
 export const LIVES = 3;
+export const RESPAWN_CD = 3 * FPS;
 
 //ship config
 export const FRICTION = 0.7; // friction coefficient of space (0 = no friction, 1 = lots of friction)
 export const SHIP_SIZE = 30; // ship height in pixels
-export const SHIP_THRUST = 10 ; // acceleration of the ship in pixels per second 
+export const SHIP_THRUST = 5 ; // acceleration of the ship in pixels per second 
 export const TURN_SPEED = 360; // turn speed in degrees per second
 export const SPEED_LIMIT = 1200 / FPS; // maximum velocity the ship can travel at
 export const INV_TIME = 2.5 * FPS; //invincibility time in secs

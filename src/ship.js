@@ -20,7 +20,7 @@ function newShip() {
         },
         inv: INV_TIME,
         cd: SHOOT_COOLDOWN,
-        dead: 0
+        deadCd: 0
     };
 }
 
@@ -43,9 +43,8 @@ export function update() {
         ship.thrust.x -= FRICTION * ship.thrust.x / FPS;
         ship.thrust.y -= FRICTION * ship.thrust.y / FPS;
     }
-    if (blink && !ship.dead) {
-        drawShip();
-        
+    if (blink && !ship.deadCd) {
+        drawShip(ship.x, ship.y, ship.a);
     } 
 
     if (ship.inv) {
@@ -57,8 +56,8 @@ export function update() {
         }
     }
     
-    if (ship.dead) {
-        ship.dead--;
+    if (ship.deadCd) {
+        ship.deadCd--;
     }    
     
     ship.a += ship.rot;
@@ -102,21 +101,21 @@ export function resetPos() {
     ship = newShip();
 }
 
-function drawShip() {
-    ctx.strokeStyle = "white";
+export function drawShip(x,y,a,color = "white") {
+    ctx.strokeStyle = color;
     ctx.lineWidth = SHIP_SIZE / 20;
     ctx.beginPath();
     ctx.moveTo( // nose of the ship
-        ship.x + 4 / 3 * ship.r * Math.cos(ship.a),
-        ship.y - 4 / 3 * ship.r * Math.sin(ship.a)
+        x + 4 / 3 * ship.r * Math.cos(a),
+        y - 4 / 3 * ship.r * Math.sin(a)
     );
     ctx.lineTo( // rear left
-        ship.x - ship.r * (2 / 3 * Math.cos(ship.a) + Math.sin(ship.a)),
-        ship.y + ship.r * (2 / 3 * Math.sin(ship.a) - Math.cos(ship.a))
+        x - ship.r * (2 / 3 * Math.cos(a) + Math.sin(a)),
+        y + ship.r * (2 / 3 * Math.sin(a) - Math.cos(a))
     );
     ctx.lineTo( // rear right
-        ship.x - ship.r * (2 / 3 * Math.cos(ship.a) - Math.sin(ship.a)),
-        ship.y + ship.r * (2 / 3 * Math.sin(ship.a) + Math.cos(ship.a))
+        x - ship.r * (2 / 3 * Math.cos(a) - Math.sin(a)),
+        y + ship.r * (2 / 3 * Math.sin(a) + Math.cos(a))
     );
     ctx.closePath();
     ctx.stroke();
@@ -147,9 +146,22 @@ function drawThruster() {
     ctx.stroke();
 }
 
+export function drawLives(lives) {
+    for (let i = 0; i < lives; i++) {
+        drawShip(SHIP_SIZE + i * SHIP_SIZE * 1.2, SHIP_SIZE, 0.5 * Math.PI);
+        
+    }
+    if (ship.deadCd) {
+        drawShip(SHIP_SIZE + lives * SHIP_SIZE * 1.2, SHIP_SIZE, 0.5 * Math.PI, "red");
+        if (lives == 0) {
+            ship.deadCd--;
+        }
+    }
+}
+
 export function onCollision() {
     ship = newShip();
-    ship.dead = DEATH_TIMER;
+    ship.deadCd = DEATH_TIMER;
 }
 
 export function shoot() {

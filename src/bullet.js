@@ -19,14 +19,15 @@ export function shoot(ship) {
     const x = ship.x + 4 / 3 * ship.r * Math.cos(ship.a);
     const y = ship.y - 4 / 3 * ship.r * Math.sin(ship.a);
     //speed and direction of ship(px per frame)
-    const xv = Math.abs(ship.thrust.x);
-    const yv = Math.abs(ship.thrust.y);
+    const xv = 0 + ship.thrust.x  * Math.cos(ship.a);
+    const yv = 0 - ship.thrust.y  * Math.sin(ship.a);
     //angle of ship
     const a = ship.a;
 
     const bullet = newBullet(x,y,xv,yv,a)
     bullets.push(bullet);
     // console.log(ship.thrust);
+    console.log(bullet);
 }
 
 export function update() {
