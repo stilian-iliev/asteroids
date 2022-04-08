@@ -22,7 +22,8 @@ document.addEventListener("keyup", keyUp);
 
 function resize(){
     canv.width = window.innerWidth;
-    canv.height = window.innerHeight;   
+    canv.height = window.innerHeight;
+    drawStartScreen();   
 }
   
 resize()
@@ -166,6 +167,15 @@ function levelUp() {
 }
 
 window.addEventListener('DOMContentLoaded', (event) => {
+    drawStartScreen();
+    document.addEventListener("keydown", () => {
+        setInterval(update, 1000 / FPS);
+        startGame();
+    }, {once : true});
+
+});
+
+function drawStartScreen() {
     ctx.fillStyle = "rgba(28,28,28,1.00)";
     ctx.fillRect(0, 0, canv.width, canv.height);
 	// Title
@@ -177,12 +187,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	// subtitle
     ctx.font = "small-caps " + TEXT_SIZE + "px dejavu sans mono";
     ctx.fillText("Press any key to start", canv.width / 2, canv.height * 0.58);
-    document.addEventListener("keydown", () => {
-        setInterval(update, 1000 / FPS);
-        startGame();
-    }, {once : true});
-
-});
+}
 
 //TODO
 //make ship and asteroid explosions
