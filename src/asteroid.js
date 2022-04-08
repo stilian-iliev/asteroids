@@ -100,3 +100,17 @@ export function onCollision(asteroid) {
     }
     asteroids.splice(asteroids.indexOf(asteroid), 1);
 }
+
+export function getRoidSize(asteroid) {
+    switch (asteroid.r) {
+        case ROID_SIZE:
+            return "BIG";
+            break;
+        case ROID_SIZE/2:
+            return "MEDIUM";
+            break;
+        case ROID_SIZE/4:
+            return "SMALL";
+            break;
+    }
+}

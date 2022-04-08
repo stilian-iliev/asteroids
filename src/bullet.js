@@ -26,8 +26,6 @@ export function shoot(ship) {
 
     const bullet = newBullet(x,y,xv,yv,a)
     bullets.push(bullet);
-    // console.log(ship.thrust);
-    console.log(bullet);
 }
 
 export function update() {
