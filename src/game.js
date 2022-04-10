@@ -23,7 +23,7 @@ document.addEventListener("keyup", keyUp);
 function resize(){
     canv.width = window.innerWidth;
     canv.height = window.innerHeight;
-    drawStartScreen();   
+    if (!level) drawStartScreen();   
 }
   
 resize()
@@ -71,7 +71,7 @@ function update() {
     ctx.fillStyle = "rgba(28,28,28,1.00)";
     ctx.fillRect(0, 0, canv.width, canv.height);
     
-    if(!dead) {
+    if(!dead || shipService.ship.deadCd) {
         shipService.update();
         checkCollision();
     } else if (dead < RESPAWN_CD) {

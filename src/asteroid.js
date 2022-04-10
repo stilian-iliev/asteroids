@@ -5,7 +5,6 @@ import { FPS,ROID_SIZE,ROID_SPEED,ROID_VERT,ROID_JAG,ROID_NUM,ASTEROIDS_PER_LEVE
 export let asteroids = [];
 
 function newAsteroid(x, y, r = ROID_SIZE) {
-    //todo
     let lvlMultiply = 1 + 0.1 * level;
     let asteroid = {
         x: x,

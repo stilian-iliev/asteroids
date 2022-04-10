@@ -45,7 +45,9 @@ export function update() {
     }
     if (blink && !ship.deadCd) {
         drawShip(ship.x, ship.y, ship.a);
-    } 
+    } else if (ship.deadCd) {
+        drawExplosion();
+    }
 
     if (ship.inv) {
         ship.inv--;
@@ -146,6 +148,30 @@ function drawThruster() {
     ctx.stroke();
 }
 
+let exolosionX, explosionY;
+function drawExplosion() {
+    ctx.fillStyle = "darkred";
+    ctx.beginPath();
+    ctx.arc(exolosionX, explosionY, ship.r * 1.7, 0, Math.PI * 2, false);
+    ctx.fill();
+    ctx.fillStyle = "red";
+    ctx.beginPath();
+    ctx.arc(exolosionX, explosionY, ship.r * 1.4, 0, Math.PI * 2, false);
+    ctx.fill();
+    ctx.fillStyle = "orange";
+    ctx.beginPath();
+    ctx.arc(exolosionX, explosionY, ship.r * 1.1, 0, Math.PI * 2, false);
+    ctx.fill();
+    ctx.fillStyle = "yellow";
+    ctx.beginPath();
+    ctx.arc(exolosionX, explosionY, ship.r * 0.8, 0, Math.PI * 2, false);
+    ctx.fill();
+    ctx.fillStyle = "white";
+    ctx.beginPath();
+    ctx.arc(exolosionX, explosionY, ship.r * 0.5, 0, Math.PI * 2, false);
+    ctx.fill();
+}
+
 export function drawLives(lives) {
     for (let i = 0; i < lives; i++) {
         drawShip(SHIP_SIZE + i * SHIP_SIZE * 1.2, SHIP_SIZE, 0.5 * Math.PI);
@@ -160,7 +186,9 @@ export function drawLives(lives) {
 }
 
 export function onCollision() {
-    ship = newShip();
+    exolosionX = ship.x;
+    explosionY = ship.y;
+    ship= newShip();
     ship.deadCd = DEATH_TIMER;
 }
 
