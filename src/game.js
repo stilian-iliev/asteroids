@@ -28,7 +28,6 @@ function resize(){
   
 resize()
 
-// let lastDirection;
 function keyDown(event) {
     if (!dead) {
         switch(event.keyCode) {
@@ -51,7 +50,6 @@ function keyDown(event) {
 }
 
 function keyUp(event) {
-    
         switch(event.keyCode) {
         case 37: // left arrow 
             shipService.stopRotation();
@@ -178,16 +176,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
 function drawStartScreen() {
     ctx.fillStyle = "rgba(28,28,28,1.00)";
     ctx.fillRect(0, 0, canv.width, canv.height);
-	// Title
     ctx.fillStyle = "rgba(193,193,193,1.00)";
     ctx.font = "small-caps " + TEXT_SIZE + "px dejavu sans mono";
     ctx.textAlign   = "center";
     ctx.textBaseline = "middle";
     ctx.fillText("ASTEROIDS", canv.width / 2, canv.height * 0.48);
-	// subtitle
     ctx.font = "small-caps " + TEXT_SIZE + "px dejavu sans mono";
     ctx.fillText("Press any key to start", canv.width / 2, canv.height * 0.58);
 }
-
-//TODO
-//make ship and asteroid explosions

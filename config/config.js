@@ -7,14 +7,14 @@ export const TEXT_FADE_TIME = 2.5;
 
 //ship config
 export const FRICTION = 0.7; // friction coefficient of space (0 = no friction, 1 = lots of friction)
-export const SHIP_SIZE = 30; // ship height in pixels
-export const SHIP_THRUST = 8 ; // acceleration of the ship in pixels per frame 
-export const TURN_SPEED = 360; // turn speed in degrees per second
-export const SPEED_LIMIT = 1200 / FPS; // maximum velocity the ship can travel at
-export const INV_TIME = 2.5 * FPS; //invincibility time in secs
-export const SHOOT_COOLDOWN = Math.floor(200 * FPS / 1000); //in ms
-export const DEATH_TIMER = 0.5 * FPS //in sec
-export const BLINK_DURATION = 5; //in frames
+export const SHIP_SIZE = 30; 
+export const SHIP_THRUST = 8 ; 
+export const TURN_SPEED = 360; 
+export const SPEED_LIMIT = 1200 / FPS; 
+export const INV_TIME = 2.5 * FPS; 
+export const SHOOT_COOLDOWN = Math.floor(200 * FPS / 1000);
+export const DEATH_TIMER = 0.5 * FPS
+export const BLINK_DURATION = 5;
 
 //bullet config
 export const BULLET_SIZE = 30;
